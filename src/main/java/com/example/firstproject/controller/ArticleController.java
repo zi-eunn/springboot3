@@ -3,6 +3,7 @@ package com.example.firstproject.controller;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import com.example.firstproject.repository.ArticleRepository;
 
@@ -36,6 +37,12 @@ public class ArticleController {
 		Article saved = articleRepository.save(article); //article 엔티티를 저장해 saved 객체에 반환
 		//System.out.println(saved.toString());
 		log.info(saved.toString());
+		return "";
+	}
+
+	@GetMapping("/articles/{id}") // 서버의 컨트롤러가 url 요청을 받는 것
+	public String show(@PathVariable Long id) { // 매개변수로 id 받아오기
+		log.info("id: " + id);
 		return "";
 	}
 }
