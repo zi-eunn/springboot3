@@ -40,7 +40,8 @@ public class ArticleController {
 		Article saved = articleRepository.save(article); //article 엔티티를 저장해 saved 객체에 반환
 		//System.out.println(saved.toString());
 		log.info(saved.toString());
-		return "";
+		return "redirect:/articles/" + saved.getId(); // 리다이렉트 redirect:URL_주소";
+		// 특정 아이디의 글이 떴으면 좋겠음 -> +를 이용해 저장해둔 아이디 값을 지정해 사용
 	}
 
 	@GetMapping("/articles/{id}") // 서버의 컨트롤러가 url 요청을 받는 것
@@ -70,5 +71,15 @@ public class ArticleController {
 
 		// 3. 뷰 페이지 설정하기
 		return "articles/index";
+	}
+
+	@GetMapping("/articles/{id}/edit")
+	public String edit(@PathVariable Long id, Model model) { // 가져올 아이디 설정하기.
+		// 수정할 데이터 가져오기
+		Article articleEntity = articleRepository.findById(id).orElse(null);
+		// 모델에 데이터 등록
+		model.addAttribute("article", articleEntity);
+		// 뷰 페이지 설정하기
+		return "articles/edit";
 	}
 }
