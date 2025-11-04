@@ -1,5 +1,7 @@
 package com.example.firstproject.controller;
 
+import java.util.List;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -10,6 +12,7 @@ import com.example.firstproject.repository.ArticleRepository;
 import com.example.firstproject.dto.ArticleForm;
 import com.example.firstproject.entity.Article;
 
+import org.springframework.ui.Model;
 import lombok.extern.slf4j.Slf4j;
 
 @Slf4j // println을 삭제하기 위한 로깅 기능.
@@ -41,8 +44,31 @@ public class ArticleController {
 	}
 
 	@GetMapping("/articles/{id}") // 서버의 컨트롤러가 url 요청을 받는 것
-	public String show(@PathVariable Long id) { // 매개변수로 id 받아오기
-		log.info("id: " + id);
-		return "";
+	public String show(@PathVariable Long id, Model model) { // 매개변수로 id 받아오기
+		log.info("id = " + id);
+		// 1. repository를 사용. id를 조회해 데이터 가져오기
+		Article articleEntity = articleRepository.findById(id).orElse(null);
+		//.orElse를 사용해 있으면 id 저장, 없으면 null 저장
+
+		// 2. 모델에 데이터 등록하기, 매개변수 Model model 추가
+		// name이라는 이름으로 value 객체 추가
+		model.addAttribute("article", articleEntity);
+
+		// 3. 뷰 페이지 반환하기
+		return "articles/show";
+
+		//return "";
+	}
+
+	@GetMapping("/articles")
+	public String index(Model model) {
+		// 1. 모든 데이터 가져오기
+		List<Article> articleEntityList = articleRepository.findAll();
+
+		// 2. 모델에 데이터 등록하기
+		model.addAttribute("articleList", articleEntityList);
+
+		// 3. 뷰 페이지 설정하기
+		return "articles/index";
 	}
 }
